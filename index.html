@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Retail Business Intelligence Dashboard based on MDPI Sustainability 2022 research: 360° Retail Business Analytics by Adopting Hybrid Machine Learning and BI.">
+  <title>Retail Business Intelligence | 360° Analytics & ML Insights</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Mobile Navigation Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <div class="app-container">
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar" id="sidebar" aria-label="Main Navigation">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <div class="logo-icon">
+            <i data-lucide="shopping-bag"></i>
+          </div>
+          <div class="brand-info">
+            <span class="brand-title">RETAIL INSIGHTS</span>
+            <span class="brand-subtitle">360° Analytics Platform</span>
+          </div>
+        </div>
+        <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close navigation menu">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#overview" class="nav-link active" data-section="overview">
+              <i data-lucide="layout-dashboard"></i>
+              <span>Overview</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#sales" class="nav-link" data-section="sales">
+              <i data-lucide="trending-up"></i>
+              <span>Sales Analytics</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#products" class="nav-link" data-section="products">
+              <i data-lucide="package"></i>
+              <span>Product Analytics</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#customers" class="nav-link" data-section="customers">
+              <i data-lucide="users"></i>
+              <span>Customer Analytics</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#geography" class="nav-link" data-section="geography">
+              <i data-lucide="globe"></i>
+              <span>Geographic Analysis</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ml-models" class="nav-link" data-section="ml-models">
+              <i data-lucide="cpu"></i>
+              <span>ML Model Comparison</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#research" class="nav-link" data-section="research">
+              <i data-lucide="book-open"></i>
+              <span>About the Research</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="academic-badge">
+          <i data-lucide="award"></i>
+          <div class="badge-text">
+            <strong>Sustainability 2022</strong>
+            <span>DOI: 10.3390/su141911942</span>
+          </div>
+        </div>
+        <div class="dataset-meta">
+          <span class="meta-label">Dataset: UCI Online Retail</span>
+          <span class="meta-sub">541,909 Records (2010–2011)</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ==================== MAIN CONTENT AREA ==================== -->
+    <div class="main-wrapper">
+      <!-- TOP HEADER BAR -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open navigation menu">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="header-titles">
+            <div class="title-row">
+              <h1 class="page-title">Retail Business Intelligence</h1>
+              <span class="badge badge-demo">STATIC DEMO</span>
+              <span class="badge badge-academic">UCI Online Retail</span>
+            </div>
+            <p class="header-subtitle">
+              360° Retail Analytics &amp; Machine Learning Insights <span class="header-period">| 2010–2011 Transaction Period</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="quick-status">
+            <span class="status-indicator live-dot"></span>
+            <span class="status-text">Academic Prototype</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- GLOBAL FILTER BAR -->
+      <section class="filter-bar" aria-label="Dashboard Filters">
+        <div class="filter-bar-header">
+          <div class="filter-title">
+            <i data-lucide="sliders-horizontal"></i>
+            <span>Interactive Filters <small class="text-muted">(Demonstration Data)</small></span>
+          </div>
+          <div class="filter-actions">
+            <span class="filter-count-badge" id="filteredCountBadge">Showing: 100% of data</span>
+            <button class="btn btn-secondary btn-sm" id="resetFiltersBtn">
+              <i data-lucide="rotate-ccw"></i>
+              <span>Reset Filters</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-controls-grid">
+          <div class="filter-group">
+            <label for="filterDateRange">
+              <i data-lucide="calendar"></i> Date Range
+            </label>
+            <select id="filterDateRange" class="form-select">
+              <option value="all">Full Period (Dec 2010 – Dec 2011)</option>
+              <option value="q1">Q1 2011 (Jan – Mar 2011)</option>
+              <option value="q2">Q2 2011 (Apr – Jun 2011)</option>
+              <option value="q3">Q3 2011 (Jul – Sep 2011)</option>
+              <option value="q4">Q4 2011 (Oct – Dec 2011)</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="filterCountry">
+              <i data-lucide="map-pin"></i> Country
+            </label>
+            <select id="filterCountry" class="form-select">
+              <option value="all">All Countries (Global)</option>
+              <option value="United Kingdom">United Kingdom (88.9%)</option>
+              <option value="Germany">Germany (2.3%)</option>
+              <option value="France">France (2.1%)</option>
+              <option value="EIRE">EIRE / Ireland (1.8%)</option>
+              <option value="Netherlands">Netherlands (0.6%)</option>
+              <option value="Australia">Australia (0.3%)</option>
+              <option value="Spain">Spain (0.6%)</option>
+              <option value="Switzerland">Switzerland (0.5%)</option>
+              <option value="Belgium">Belgium (0.5%)</option>
+              <option value="Portugal">Portugal (0.4%)</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="filterCategory">
+              <i data-lucide="tags"></i> Product Category
+            </label>
+            <select id="filterCategory" class="form-select">
+              <option value="all">All Categories</option>
+              <option value="Home & Living">Home &amp; Living</option>
+              <option value="Ceramics & Tableware">Ceramics &amp; Tableware</option>
+              <option value="Bags & Accessories">Bags &amp; Accessories</option>
+              <option value="Party & Decor">Party &amp; Decor</option>
+              <option value="Giftware & Novelty">Giftware &amp; Novelty</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- EMPTY STATE ALERT (HIDDEN BY DEFAULT) -->
+      <div class="empty-state-card" id="emptyStateCard" style="display: none;">
+        <i data-lucide="search-x" class="empty-icon"></i>
+        <h3>No Matching Demonstrative Records</h3>
+        <p>The selected combination of Date Range, Country, and Category produced no records in the demonstration dataset.</p>
+        <button class="btn btn-primary" id="emptyStateResetBtn">
+          <i data-lucide="rotate-ccw"></i> Reset Filters to Default
+        </button>
+      </div>
+
+      <!-- MAIN DASHBOARD CONTENT -->
+      <main class="content-container" id="dashboardContent">
+
+        <!-- ==================== SECTION 1: OVERVIEW ==================== -->
+        <section id="overview" class="dashboard-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">1. Executive Overview — Key Performance Indicators</h2>
+              <p class="section-subtitle">High-level sales volume, order efficiency, and operational measures</p>
+            </div>
+            <span class="badge badge-demo">Illustrative Simulation Data</span>
+          </div>
+
+          <!-- Academic / Methodological Notice -->
+          <div class="alert-box alert-info">
+            <div class="alert-icon"><i data-lucide="info"></i></div>
+            <div class="alert-body">
+              <strong>Data Modeling &amp; Cleaning Context:</strong>
+              Revenue is computed as <code>Quantity &times; UnitPrice</code> for positive transactions.
+              In accordance with the journal methodology, cancellations (invoices prefixed with 'C') and product returns (Quantity &lt; 0)
+              are isolated to avoid distorting gross retail sales metrics. All values shown below reflect mathematically consistent demonstrative data.
+            </div>
+          </div>
+
+          <!-- 6 KPI CARDS -->
+          <div class="kpi-grid">
+            <!-- 1. Total Revenue -->
+            <div class="kpi-card" id="kpiCardRevenue">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Total Revenue</span>
+                <div class="kpi-icon icon-blue">
+                  <i data-lucide="pound-sterling"></i>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpiRevenue">£8,924,560</div>
+              <div class="kpi-footer">
+                <span class="kpi-badge badge-positive" id="kpiRevenueTrend">
+                  <i data-lucide="trending-up"></i> +12.4% vs Prev
+                </span>
+                <span class="kpi-desc">Gross sales from transactions</span>
+              </div>
+            </div>
+
+            <!-- 2. Total Orders -->
+            <div class="kpi-card" id="kpiCardOrders">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Total Orders</span>
+                <div class="kpi-icon icon-teal">
+                  <i data-lucide="shopping-cart"></i>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpiOrders">18,452</div>
+              <div class="kpi-footer">
+                <span class="kpi-badge badge-positive" id="kpiOrdersTrend">
+                  <i data-lucide="trending-up"></i> +8.1% vs Prev
+                </span>
+                <span class="kpi-desc">Distinct invoice bookings</span>
+              </div>
+            </div>
+
+            <!-- 3. Units Sold -->
+            <div class="kpi-card" id="kpiCardUnits">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Units Sold</span>
+                <div class="kpi-icon icon-emerald">
+                  <i data-lucide="box"></i>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpiUnits">5,124,800</div>
+              <div class="kpi-footer">
+                <span class="kpi-badge badge-positive" id="kpiUnitsTrend">
+                  <i data-lucide="trending-up"></i> +14.6% vs Prev
+                </span>
+                <span class="kpi-desc">Total quantity purchased</span>
+              </div>
+            </div>
+
+            <!-- 4. Unique Customers -->
+            <div class="kpi-card" id="kpiCardCustomers">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Unique Customers</span>
+                <div class="kpi-icon icon-purple">
+                  <i data-lucide="user-check"></i>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpiCustomers">4,372</div>
+              <div class="kpi-footer">
+                <span class="kpi-badge badge-neutral" id="kpiCustomersTrend">
+                  <i data-lucide="activity"></i> +5.2% vs Prev
+                </span>
+                <span class="kpi-desc">Registered buyers across 10 countries</span>
+              </div>
+            </div>
+
+            <!-- 5. Unique Products -->
+            <div class="kpi-card" id="kpiCardProducts">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Unique Products</span>
+                <div class="kpi-icon icon-amber">
+                  <i data-lucide="layers"></i>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpiProducts">3,684</div>
+              <div class="kpi-footer">
+                <span class="kpi-badge badge-neutral">Active SKU Catalog</span>
+                <span class="kpi-desc">Distinct items in catalog</span>
+              </div>
+            </div>
+
+            <!-- 6. Average Order Value -->
+            <div class="kpi-card" id="kpiCardAOV">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Average Order Value (AOV)</span>
+                <div class="kpi-icon icon-cyan">
+                  <i data-lucide="receipt"></i>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpiAOV">£483.66</div>
+              <div class="kpi-footer">
+                <span class="kpi-badge badge-positive" id="kpiAovTrend">
+                  <i data-lucide="trending-up"></i> +4.0% vs Prev
+                </span>
+                <span class="kpi-desc">Revenue per completed order</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 2: SALES ANALYTICS ==================== -->
+        <section id="sales" class="dashboard-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">2. Sales Analytics — Temporal Patterns &amp; Velocity</h2>
+              <p class="section-subtitle">Monthly revenue progression, order frequency, and day-of-week demand distributions</p>
+            </div>
+            <span class="badge badge-demo">Demo Data</span>
+          </div>
+
+          <!-- Sales Summary Strip -->
+          <div class="stat-strip">
+            <div class="stat-pill">
+              <span class="stat-pill-label">Period Gross Revenue</span>
+              <span class="stat-pill-value" id="stripRevenue">£8,924,560</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-pill-label">Total Invoices</span>
+              <span class="stat-pill-value" id="stripOrders">18,452</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-pill-label">Average Basket</span>
+              <span class="stat-pill-value" id="stripAOV">£483.66</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-pill-label">Est. Cancellation Rate</span>
+              <span class="stat-pill-value text-muted">~2.2% (Filtered)</span>
+            </div>
+          </div>
+
+          <!-- Grid: Monthly Revenue & Monthly Orders -->
+          <div class="charts-grid-2">
+            <!-- Monthly Revenue Trend -->
+            <div class="card chart-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i data-lucide="line-chart" class="card-icon"></i>
+                  <div>
+                    <h3 class="card-title">Monthly Revenue Trend (2010–2011)</h3>
+                    <p class="card-caption">Total sales (£ GBP) across time hierarchy</p>
+                  </div>
+                </div>
+                <span class="badge badge-subtle">Line Chart</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="monthlyRevenueChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Monthly Orders Volume -->
+            <div class="card chart-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i data-lucide="bar-chart-2" class="card-icon"></i>
+                  <div>
+                    <h3 class="card-title">Monthly Orders Count</h3>
+                    <p class="card-caption">Total completed order transactions per month</p>
+                  </div>
+                </div>
+                <span class="badge badge-subtle">Bar Chart</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="monthlyOrdersChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sales by Day of Week & Business Insight Panel -->
+          <div class="charts-grid-2 mt-4">
+            <!-- Day of Week Distribution -->
+            <div class="card chart-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i data-lucide="calendar-days" class="card-icon"></i>
+                  <div>
+                    <h3 class="card-title">Sales by Day of Week</h3>
+                    <p class="card-caption">Weekly purchasing rhythm (Store non-operational on Saturdays)</p>
+                  </div>
+                </div>
+                <span class="badge badge-subtle">Day Hierarchy</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="dayOfWeekChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Dynamic Business Interpretation Panel -->
+            <div class="card insight-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i data-lucide="lightbulb" class="card-icon text-amber"></i>
+                  <div>
+                    <h3 class="card-title">Business Interpretation &amp; Diagnostic Insights</h3>
+                    <p class="card-caption">Rule-based analytical inference from demonstrative data</p>
+                  </div>
+                </div>
+                <span class="badge badge-info">Rule-Based Engine</span>
+              </div>
+              <div class="insight-content" id="salesInsightPanel">
+                <!-- Dynamically populated via JS -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 3: PRODUCT ANALYTICS ==================== -->
+        <section id="products" class="dashboard-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">3. Product Analytics — Performance &amp; Assortment</h2>
+              <p class="section-subtitle">Top revenue generators, volume leaders, and catalog revenue share</p>
+            </div>
+            <span class="badge badge-demo">Demo Data</span>
+          </div>
+
+          <!-- Product Highlights Banner -->
+          <div class="highlight-cards-grid">
+            <div class="highlight-card highlight-gold">
+              <div class="highlight-icon"><i data-lucide="trophy"></i></div>
+              <div class="highlight-details">
+                <span class="highlight-label">Highest Revenue Product</span>
+                <strong class="highlight-name" id="topProductRevenueName">REGENCY CAKESTAND 3 TIER</strong>
+                <span class="highlight-val" id="topProductRevenueVal">£164,765 &bull; StockCode: 22423</span>
+              </div>
+            </div>
+            <div class="highlight-card highlight-teal">
+              <div class="highlight-icon"><i data-lucide="package-check"></i></div>
+              <div class="highlight-details">
+                <span class="highlight-label">Highest Quantity Sold Product</span>
+                <strong class="highlight-name" id="topProductQuantityName">WHITE HANGING HEART T-LIGHT HOLDER</strong>
+                <span class="highlight-val" id="topProductQuantityVal">35,420 Units &bull; StockCode: 85123A</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts: Top Products by Revenue & Top Products by Quantity -->
+          <div class="charts-grid-2 mt-4">
+            <div class="card chart-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i data-lucide="award" class="card-icon"></i>
+                  <div>
+                    <h3 class="card-title">Top 10 Products by Revenue</h3>
+                    <p class="card-caption">Highest monetary value contributors (£ GBP)</p>
+                  </div>
+                </div>
+                <span class="badge badge-subtle">Horizontal Bar</span>
+              </div>
+              <div class="chart-container" style="height: 380px;">
+                <canvas id="topProductsRevenueChart"></canvas>
+              </div>
+            </div>
+
+            <div class="card chart-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i data-lucide="boxes" class="card-icon"></i>
+                  <div>
+                    <h3 class="card-title">Top 10 Products by Quantity Sold</h3>
+                    <p class="card-caption">Highest unit volume distribution</p>
+                  </div>
+                </div>
+                <span class="badge badge-subtle">Horizontal Bar</span>
+              </div>
+              <div class="chart-container" style="height: 380px;">
+                <canvas id="topProductsQuantityChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Detailed Table -->
+          <div class="card mt-4">
+            <div class="card-header table-header-flex">
+              <div>
+                <h3 class="card-title">Product Catalog Performance Breakdown</h3>
+                <p class="card-caption">Interactive breakdown with quantity, revenue, and portfolio share</p>
+              </div>
+              <div class="table-search-box">
+                <i data-lucide="search"></i>
+                <input type="text" id="productTableSearch" placeholder="Search product or code..." aria-label="Search product table">
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table id="productTable" class="data-table">
+                <thead>
+                  <tr>
+                    <th data-sort="name" class="sortable">Product Description <span class="sort-icon">↕</span></th>
+                    <th data-sort="stockCode" class="sortable">Stock Code <span class="sort-icon">↕</span></th>
+                    <th data-sort="category" class="sortable">Category <span class="sort-icon">↕</span></th>
+                    <th data-sort="quantity" class="sortable text-right">Quantity Sold <span class="sort-icon">↕</span></th>
+                    <th data-sort="revenue" class="sortable text-right">Revenue (£) <span class="sort-icon">↕</span></th>
+                    <th data-sort="share" class="sortable text-right">Share of Revenue (%) <span class="sort-icon">↕</span></th>
+                  </tr>
+                </thead>
+                <tbody id="productTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 4: CUSTOMER ANALYTICS ==================== -->
+        <section id="customers" class="dashboard-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">4. Customer Analytics — Segmentation &amp; Lifetime Value</h2>
+              <p class="section-subtitle">Recency, Frequency, Monetary (RFM) modeling and customer contribution curves</p>
+            </div>
+            <span class="badge badge-demo">Demo Data</span>
+          </div>
+
+          <!-- RFM Methodological Explanation Panel -->
+          <div class="rfm-explainer-card">
+            <div class="rfm-explainer-header">
+              <i data-lucide="sparkles" class="text-teal"></i>
+              <h3>RFM Methodology (As Formulated in Sustainability 2022 Paper)</h3>
+            </div>
+            <p class="rfm-explainer-intro">
+              The research identifies that retail customer profiling cannot rely solely on demographic data.
+              Instead, behavioral metrics are derived from transaction histories to compute an <strong>RFM Score</strong>:
+            </p>
+            <div class="rfm-dimensions-grid">
+              <div class="rfm-dim-box">
+                <div class="rfm-dim-letter">R</div>
+                <div class="rfm-dim-name">Recency</div>
+                <p>Days elapsed since the customer's last invoice. Lower recency indicates active, high-affinity customers.</p>
+              </div>
+              <div class="rfm-dim-box">
+                <div class="rfm-dim-letter">F</div>
+                <div class="rfm-dim-name">Frequency</div>
+                <p>Total count of distinct purchase transactions. Measures loyalty and repetitive engagement.</p>
+              </div>
+              <div class="rfm-dim-box">
+                <div class="rfm-dim-letter">M</div>
+                <div class="rfm-dim-name">Monetary</div>
+                <p>Cumulative revenue generated in GBP. Indicates total lifetime financial contribution to the business.</p>
+              </div>
+            </div>
+            <div class="rfm-note">
+              <i data-lucide="shield-alert"></i>
+              <span><strong>Note:</strong> Customer clusters shown below are illustrative segments reflecting the RFM concepts discussed in Section 3 and Figure 9 of the paper.</span>
+            </div>
+          </div>
+
+          <!-- Customer Segmentation Cards -->
+          <div class="segment-cards-grid mt-4">
+            <div class="segment-card segment-champion">
+              <div class="segment-header">
+                <span class="segment-title">High Value (Champions)</span>
+                <span class="segment-badge">Low R &bull; High F &bull; High M</span>
+              </div>
+              <div class="segment-stats">
+                <div class="stat-col"><span class="val" id="segChampCount">18%</span><span class="lbl">Customer Share</span></div>
+                <div class="stat-col"><span class="val" id="segChampRev">62.4%</span><span class="lbl">Revenue Share</span></div>
+              </div>
+              <p class="segment-action">Strategy: VIP loyalty programs, early product drops, dedicated account support.</p>
+            </div>
+
+            <div class="segment-card segment-loyal">
+              <div class="segment-header">
+                <span class="segment-title">Loyal Customers</span>
+                <span class="segment-badge">Mod R &bull; High F &bull; Mod M</span>
+              </div>
+              <div class="segment-stats">
+                <div class="stat-col"><span class="val" id="segLoyalCount">26%</span><span class="lbl">Customer Share</span></div>
+                <div class="stat-col"><span class="val" id="segLoyalRev">21.8%</span><span class="lbl">Revenue Share</span></div>
+              </div>
+              <p class="segment-action">Strategy: Cross-selling complementary products, referral bonuses, review engagement.</p>
+            </div>
+
+            <div class="segment-card segment-potential">
+              <div class="segment-header">
+                <span class="segment-title">Potential Growth</span>
+                <span class="segment-badge">Low R &bull; Low F &bull; Mod M</span>
+              </div>
+              <div class="segment-stats">
+                <div class="stat-col"><span class="val" id="segPotCount">31%</span><span class="lbl">Customer Share</span></div>
+                <div class="stat-col"><span class="val" id="segPotRev">11.3%</span><span class="lbl">Revenue Share</span></div>
+              </div>
+              <p class="segment-action">Strategy: Target with personalized discounts, onboarding series, and bundle offerings.</p>
+            </div>
+
+            <div class="segment-card segment-atrisk">
+              <div class="segment-header">
+                <span class="segment-title">At Risk / Dormant</span>
+                <span class="segment-badge">High R &bull; Low F &bull; Low M</span>
+              </div>
+              <div class="segment-stats">
+                <div class="stat-col"><span class="val" id="segRiskCount">25%</span><span class="lbl">Customer Share</span></div>
+                <div class="stat-col"><span class="val" id="segRiskRev">4.5%</span><span class="lbl">Revenue Share</span></div>
+              </div>
+              <p class="segment-action">Strategy: Re-engagement campaigns, surveys on satisfaction, win-back coupons.</p>
+            </div>
+          </div>
+
+          <!-- Charts: Customer Revenue Contribution & Segment Distribution -->
+          <div class="charts-grid-2 mt-4">
+            <div class="card chart-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i data-lucide="pie-chart" class="card-icon"></i>
+                  <div>
+                    <h3 class="card-title">Customer Revenue Contribution by Segment</h3>
+                    <p class="card-caption">Pareto concentration of revenue across behavioral tiers</p>
+                  </div>
+                </div>
+                <span class="badge badge-subtle">Doughnut</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="customerSegmentChart"></canvas>
+              </div>
+            </div>
+
+            <div class="card chart-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i data-lucide="user-check" class="card-icon"></i>
+                  <div>
+                    <h3 class="card-title">Top 10 Customers by Revenue</h3>
+                    <p class="card-caption">Key accounts from UCI dataset transaction logs</p>
+                  </div>
+                </div>
+                <span class="badge badge-subtle">Horizontal Bar</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="topCustomersChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Customers Table -->
+          <div class="card mt-4">
+            <div class="card-header table-header-flex">
+              <div>
+                <h3 class="card-title">Key Customer Accounts &amp; RFM Records</h3>
+                <p class="card-caption">Sampled from paper's RFM table (Figure 9) with demonstrative order metrics</p>
+              </div>
+              <div class="table-search-box">
+                <i data-lucide="search"></i>
+                <input type="text" id="customerTableSearch" placeholder="Search Customer ID or Segment..." aria-label="Search customer table">
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table id="customerTable" class="data-table">
+                <thead>
+                  <tr>
+                    <th data-sort="id" class="sortable">Customer ID <span class="sort-icon">↕</span></th>
+                    <th data-sort="orders" class="sortable text-right">Total Orders <span class="sort-icon">↕</span></th>
+                    <th data-sort="quantity" class="sortable text-right">Total Quantity <span class="sort-icon">↕</span></th>
+                    <th data-sort="revenue" class="sortable text-right">Revenue (£) <span class="sort-icon">↕</span></th>
+                    <th data-sort="recency" class="sortable text-right">Recency (Days) <span class="sort-icon">↕</span></th>
+                    <th data-sort="segment" class="sortable">Segment <span class="sort-icon">↕</span></th>
+                  </tr>
+                </thead>
+                <tbody id="customerTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 5: GEOGRAPHIC ANALYSIS ==================== -->
+        <section id="geography" class="dashboard-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">5. Geographic Analysis — Regional Revenue Spread</h2>
+              <p class="section-subtitle">Multi-national retail distribution across European and global export markets</p>
+            </div>
+            <span class="badge badge-demo">Demo Data</span>
+          </div>
+
+          <!-- Geographic KPI Banner -->
+          <div class="highlight-cards-grid">
+            <div class="highlight-card highlight-blue">
+              <div class="highlight-icon"><i data-lucide="map"></i></div>
+              <div class="highlight-details">
+                <span class="highlight-label">Primary Market Dominance</span>
+                <strong class="highlight-name">United Kingdom (UK)</strong>
+                <span class="highlight-val">~88.9% Total Transactions &bull; £7,285k+ Total Spend</span>
+              </div>
+            </div>
+            <div class="highlight-card highlight-purple">
+              <div class="highlight-icon"><i data-lucide="plane"></i></div>
+              <div class="highlight-details">
+                <span class="highlight-label">Leading Export Destination</span>
+                <strong class="highlight-name">Netherlands &amp; EIRE</strong>
+                <span class="highlight-val">Highest International AOV &bull; Fast-growing EU demand</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart & Geographic Table -->
+          <div class="charts-grid-2 mt-4">
+            <!-- Top Countries Bar Chart -->
+            <div class="card chart-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i data-lucide="bar-chart-horizontal" class="card-icon"></i>
+                  <div>
+                    <h3 class="card-title">Top 10 Countries by Revenue</h3>
+                    <p class="card-caption">National revenue ranking from UCI Retail transactions</p>
+                  </div>
+                </div>
+                <span class="badge badge-subtle">Ranked Bar</span>
+              </div>
+              <div class="chart-container" style="height: 380px;">
+                <canvas id="countryRevenueChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Country Share Doughnut -->
+            <div class="card chart-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i data-lucide="pie-chart" class="card-icon"></i>
+                  <div>
+                    <h3 class="card-title">Geographic Revenue Distribution</h3>
+                    <p class="card-caption">Domestic (UK) vs International Export share</p>
+                  </div>
+                </div>
+                <span class="badge badge-subtle">Distribution</span>
+              </div>
+              <div class="chart-container" style="height: 380px;">
+                <canvas id="countryShareChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Country Detailed Table -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <h3 class="card-title">Country Breakdown &amp; Transaction Density</h3>
+              <p class="card-caption">Consistent with paper's empirical country distribution percentages</p>
+            </div>
+            <div class="table-wrapper">
+              <table id="countryTable" class="data-table">
+                <thead>
+                  <tr>
+                    <th data-sort="country" class="sortable">Country <span class="sort-icon">↕</span></th>
+                    <th data-sort="orders" class="sortable text-right">Orders <span class="sort-icon">↕</span></th>
+                    <th data-sort="customers" class="sortable text-right">Active Customers <span class="sort-icon">↕</span></th>
+                    <th data-sort="units" class="sortable text-right">Units Sold <span class="sort-icon">↕</span></th>
+                    <th data-sort="revenue" class="sortable text-right">Revenue (£) <span class="sort-icon">↕</span></th>
+                    <th data-sort="share" class="sortable text-right">Revenue Share (%) <span class="sort-icon">↕</span></th>
+                  </tr>
+                </thead>
+                <tbody id="countryTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 6: ML MODEL COMPARISON ==================== -->
+        <section id="ml-models" class="dashboard-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">6. Machine Learning Model Comparison</h2>
+              <p class="section-subtitle">Empirical classification benchmark published in Table 1 of the reference journal</p>
+            </div>
+            <span class="badge badge-academic">Reported Journal Results</span>
+          </div>
+
+          <!-- Academic Strict Disclaimer Banner -->
+          <div class="alert-box alert-warning">
+            <div class="alert-icon"><i data-lucide="shield-check"></i></div>
+            <div class="alert-body">
+              <strong>Academic Integrity Notice:</strong>
+              “Reported results from the reference paper. These are not predictions or experiments performed by this static dashboard.”
+              All scores presented below are directly transcribed from <em>Table 1: ML classification model scores</em> in
+              <strong>Sustainability 2022, 14, 11942</strong>. No artificial metrics (such as unverified Precision, Recall, or F1 scores) are fabricated.
+            </div>
+          </div>
+
+          <!-- Champion ML Algorithm Card -->
+          <div class="ml-champion-banner">
+            <div class="trophy-badge">
+              <i data-lucide="crown"></i>
+            </div>
+            <div class="champion-info">
+              <div class="champion-tag">BEST PERFORMING ALGORITHM IN STUDY</div>
+              <h3 class="champion-name">Gradient Boosting — 95.39% Accuracy</h3>
+              <p class="champion-desc">
+                Achieved the highest classification performance on customer category prediction, closely followed by the
+                <strong>Voting Classifier (95.30%)</strong> and <strong>Logistic Regression (94.93%)</strong>.
+              </p>
+            </div>
+          </div>
+
+          <!-- Grid: ML Chart & Official Table -->
+          <div class="charts-grid-2 mt-4">
+            <!-- Accuracy Bar Chart -->
+            <div class="card chart-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i data-lucide="bar-chart-3" class="card-icon text-emerald"></i>
+                  <div>
+                    <h3 class="card-title">ML Algorithms Ranked by Accuracy</h3>
+                    <p class="card-caption">Sorted descending from highest to lowest reported score</p>
+                  </div>
+                </div>
+                <span class="badge badge-academic">Table 1 Citation</span>
+              </div>
+              <div class="chart-container" style="height: 380px;">
+                <canvas id="mlAccuracyChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Official Table 1 Representation -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i data-lucide="table" class="card-icon"></i>
+                  <div>
+                    <h3 class="card-title">Table 1. ML Classification Model Scores</h3>
+                    <p class="card-caption">Exact scores as reported in paper publication</p>
+                  </div>
+                </div>
+                <span class="badge badge-academic">Exact Publication Data</span>
+              </div>
+              <div class="table-wrapper">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Algorithm</th>
+                      <th class="text-right">Accuracy Score</th>
+                      <th>Model Class</th>
+                      <th>Paper Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="highlight-row">
+                      <td><span class="rank-badge rank-1">#1</span></td>
+                      <td><strong>Gradient Boosting</strong></td>
+                      <td class="text-right font-bold text-emerald">95.39%</td>
+                      <td>Ensemble (Boosting)</td>
+                      <td><span class="status-pill status-success">Highest Accuracy</span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="rank-badge">#2</span></td>
+                      <td>Voting Classifier</td>
+                      <td class="text-right font-bold">95.30%</td>
+                      <td>Hybrid Ensemble</td>
+                      <td><span class="status-pill status-success">Near Optimal</span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="rank-badge">#3</span></td>
+                      <td>Logistic Regression</td>
+                      <td class="text-right font-bold">94.93%</td>
+                      <td>Linear Classifier</td>
+                      <td><span class="status-pill status-info">Strong Baseline</span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="rank-badge">#4</span></td>
+                      <td>Random Forest</td>
+                      <td class="text-right font-bold">94.56%</td>
+                      <td>Ensemble (Bagging)</td>
+                      <td><span class="status-pill status-info">Robust Non-Linear</span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="rank-badge">#5</span></td>
+                      <td>Decision Tree (DT)</td>
+                      <td class="text-right font-bold">89.76%</td>
+                      <td>Tree-Based</td>
+                      <td><span class="status-pill status-neutral">Moderate</span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="rank-badge">#6</span></td>
+                      <td>KNN (K-Nearest Neighbors)</td>
+                      <td class="text-right font-bold">84.23%</td>
+                      <td>Instance-Based</td>
+                      <td><span class="status-pill status-neutral">Baseline</span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="rank-badge">#7</span></td>
+                      <td>SVC (Support Vector Classifier)</td>
+                      <td class="text-right font-bold">75.92%</td>
+                      <td>Kernel Margin</td>
+                      <td><span class="status-pill status-warning">Lower Tier</span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="rank-badge">#8</span></td>
+                      <td>AdaBoost</td>
+                      <td class="text-right font-bold text-amber">59.59%</td>
+                      <td>Adaptive Boosting</td>
+                      <td><span class="status-pill status-warning">Weak Performer</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interpretation Guidelines Panel -->
+          <div class="card mt-4 interpretation-panel">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i data-lucide="book-marked" class="card-icon text-blue"></i>
+                <div>
+                  <h3 class="card-title">How to Interpret the ML Experimental Results</h3>
+                  <p class="card-caption">Critical thinking and methodological reflections for BI &amp; Data Science students</p>
+                </div>
+              </div>
+            </div>
+            <div class="interpretation-grid">
+              <div class="interp-item">
+                <div class="interp-num">01</div>
+                <h4>Accuracy Definition</h4>
+                <p>
+                  Accuracy represents the proportion of correct predictions across all evaluated customer test instances.
+                  In the paper, customer profiles were categorized into 11 business behavior buckets based on product clustering (K-Means &amp; PCA).
+                </p>
+              </div>
+
+              <div class="interp-num-box interp-item">
+                <div class="interp-num">02</div>
+                <h4>Experimental Constraints</h4>
+                <p>
+                  These scores reflect the specific hyperparameter settings, train/test split, and feature engineering choices
+                  detailed in the paper. They demonstrate model viability under this exact transactional retail schema.
+                </p>
+              </div>
+
+              <div class="interp-num-box interp-item">
+                <div class="interp-num">03</div>
+                <h4>Beyond Raw Accuracy</h4>
+                <p>
+                  In real-world retail deployments, accuracy alone is insufficient. Practitioners must also consider class balance,
+                  confusion matrices, computational latency, and business costs of misclassification (false positives vs false negatives).
+                </p>
+              </div>
+
+              <div class="interp-num-box interp-item">
+                <div class="interp-num">04</div>
+                <h4>Generalization Nuances</h4>
+                <p>
+                  The best model for retail forecasting varies across industries, catalog dynamics, seasonal volatility, and feature sets.
+                  Continuous re-training and monitoring are essential when deploying ML in production data warehouses.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 7: ABOUT THE RESEARCH ==================== -->
+        <section id="research" class="dashboard-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">7. About the Research — Hybrid BI &amp; ML Architecture</h2>
+              <p class="section-subtitle">Academic citation, architectural pipeline, and methodology synthesis</p>
+            </div>
+            <span class="badge badge-academic">Academic Reference</span>
+          </div>
+
+          <!-- Paper Citation Card -->
+          <div class="card citation-card">
+            <div class="citation-header">
+              <span class="citation-journal">MDPI SUSTAINABILITY &bull; VOLUME 14 &bull; ISSUE 19 &bull; 11942</span>
+              <span class="citation-year">Published: September 2022</span>
+            </div>
+            <h3 class="citation-title">
+              “360° Retail Business Analytics by Adopting Hybrid Machine Learning and a Business Intelligence Approach”
+            </h3>
+            <p class="citation-authors">
+              <strong>Authors:</strong> Abdulmajeed Alqhatani, Muhammad Shoaib Ashraf, Javed Ferzund, Ahmad Shaf, Hamad Ali Abosaq, Saifur Rahman, Muhammad Irfan, Samar M. Alqhtani
+            </p>
+            <p class="citation-affiliations">
+              <em>Affiliations:</em> Najran University (Saudi Arabia), University of Management and Technology Lahore (Pakistan), COMSATS University Islamabad (Pakistan).
+            </p>
+            <div class="citation-footer">
+              <a href="https://doi.org/10.3390/su141911942" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
+                <i data-lucide="external-link"></i>
+                <span>Open DOI: 10.3390/su141911942</span>
+              </a>
+              <span class="citation-license">Open Access &bull; Creative Commons CC BY 4.0</span>
+            </div>
+          </div>
+
+          <!-- Architectural Pipeline Diagram -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i data-lucide="workflow" class="card-icon text-teal"></i>
+                <div>
+                  <h3 class="card-title">Conceptual End-to-End Pipeline</h3>
+                  <p class="card-caption">The 6-stage architecture integrating operational data, data warehousing, BI, and ML</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Responsive Flow Diagram Cards -->
+            <div class="pipeline-flow">
+              <div class="pipeline-step">
+                <div class="step-num">Step 1</div>
+                <div class="step-icon"><i data-lucide="database"></i></div>
+                <h4 class="step-title">Business Data</h4>
+                <p class="step-desc">POS, CRM &amp; Web logs (541k records from UCI Online Retail repository).</p>
+              </div>
+
+              <div class="pipeline-arrow"><i data-lucide="arrow-right"></i></div>
+
+              <div class="pipeline-step">
+                <div class="step-num">Step 2</div>
+                <div class="step-icon"><i data-lucide="filter"></i></div>
+                <h4 class="step-title">ETL &amp; Preprocessing</h4>
+                <p class="step-desc">Cleaning nulls, isolating returns/cancellations, and deriving temporal hierarchies.</p>
+              </div>
+
+              <div class="pipeline-arrow"><i data-lucide="arrow-right"></i></div>
+
+              <div class="pipeline-step">
+                <div class="step-num">Step 3</div>
+                <div class="step-icon"><i data-lucide="layers"></i></div>
+                <h4 class="step-title">Data Warehouse</h4>
+                <p class="step-desc">Star schema with <code>SalesFact</code> connected to Customer, Product, Time &amp; Location dims.</p>
+              </div>
+
+              <div class="pipeline-arrow"><i data-lucide="arrow-right"></i></div>
+
+              <div class="pipeline-step">
+                <div class="step-num">Step 4</div>
+                <div class="step-icon"><i data-lucide="pie-chart"></i></div>
+                <h4 class="step-title">BI Analytics</h4>
+                <p class="step-desc">Descriptive &amp; Diagnostic (DD-BI) ROLAP/MOLAP slicing, KPIs, and ad-hoc reports.</p>
+              </div>
+
+              <div class="pipeline-arrow"><i data-lucide="arrow-right"></i></div>
+
+              <div class="pipeline-step">
+                <div class="step-num">Step 5</div>
+                <div class="step-icon"><i data-lucide="cpu"></i></div>
+                <h4 class="step-title">Machine Learning</h4>
+                <p class="step-desc">K-Means clustering, PCA, 8 Classification models, and ARIMA sales forecasting.</p>
+              </div>
+
+              <div class="pipeline-arrow"><i data-lucide="arrow-right"></i></div>
+
+              <div class="pipeline-step highlight-step">
+                <div class="step-num">Step 6</div>
+                <div class="step-icon"><i data-lucide="layout-dashboard"></i></div>
+                <h4 class="step-title">Insights Dashboard</h4>
+                <p class="step-desc">Executive 360° decision support, dynamic ad-hoc querying, and strategic execution.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Academic Scope & Technical Distinction -->
+          <div class="scope-grid mt-4">
+            <div class="card scope-card">
+              <div class="card-header">
+                <i data-lucide="check-circle-2" class="card-icon text-emerald"></i>
+                <h3 class="card-title">What This Dashboard Represents</h3>
+              </div>
+              <ul class="scope-list">
+                <li>A front-end Business Intelligence web application prototype built for academic coursework.</li>
+                <li>Simulates a responsive, self-service retail analytics interface as conceptualized in the paper.</li>
+                <li>Faithfully presents the published ML accuracy comparison table from Table 1 of the paper.</li>
+                <li>Illustrates multi-dimensional OLAP slicing by Date, Country, and Product Category.</li>
+              </ul>
+            </div>
+
+            <div class="card scope-card">
+              <div class="card-header">
+                <i data-lucide="alert-octagon" class="card-icon text-amber"></i>
+                <h3 class="card-title">Academic Boundaries &amp; Limitations</h3>
+              </div>
+              <ul class="scope-list">
+                <li>The dashboard is a static web application without a live cloud database or backend server.</li>
+                <li>Demonstration data numbers are simulated for educational presentation and do not represent raw real-time transactional logs.</li>
+                <li>The frontend does not train or run machine learning models in real time; model figures are citations.</li>
+                <li>No customer confidential data or private credentials are included or required.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- FOOTER -->
+      <footer class="app-footer">
+        <div class="footer-content">
+          <div class="footer-left">
+            <strong>Retail Business Intelligence Dashboard</strong>
+            <p>Coursework Assignment: Business Intelligence &amp; Data Visualization</p>
+          </div>
+          <div class="footer-right">
+            <span>Reference: <em>MDPI Sustainability 2022, 14, 11942</em></span>
+            <div class="footer-links">
+              <a href="https://doi.org/10.3390/su141911942" target="_blank" rel="noopener noreferrer">Research Paper</a>
+              <span>&bull;</span>
+              <a href="#overview">Back to Top</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- FLOATING BACK TO TOP BUTTON -->
+  <button class="back-to-top-btn" id="backToTopBtn" aria-label="Back to top">
+    <i data-lucide="chevron-up"></i>
+  </button>
+
+  <!-- Script logic -->
+  <script src="script.js"></script>
+</body>
+</html>
