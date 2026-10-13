@@ -76,8 +76,6 @@ BI/
 ├── style.css                   # Sistem desain dan styling responsif
 ├── script.js                   # Mesin data demonstrasi, chart, filter & sorting
 ├── README.md                   # Dokumentasi proyek & panduan deployment
-├── prompt.md                   # Instruksi tugas kuliah
-└── sustainability-14-11942.pdf # Jurnal acuan ilmiah (MDPI Sustainability 2022)
 ```
 
 ---
